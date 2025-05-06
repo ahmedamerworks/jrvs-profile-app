@@ -69,7 +69,9 @@ const handleSkillFilterChange = (selected: string[]) => {
   return (
     <View style={styles.container}>
       <SearchBar className="custom-class" placeholder="Search by name" 
-      onChangeHandler={(e) => setSearchQuery(e.target.value)} />
+      // onChangeHandler={(e) => setSearchQuery(e.target.value)} 
+      onChangeHandler={(query) => setSearchQuery(query)} 
+      />
       {/* Skill Filter Dropdown */}
     <Picker
     selectedValue={selectedSkill}
