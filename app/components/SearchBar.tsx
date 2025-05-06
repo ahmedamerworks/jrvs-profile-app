@@ -1,10 +1,16 @@
-import { ChangeEvent } from 'react';
+import { StyleProp, TextInput, TextStyle } from 'react-native';
 import './SearchBar.styles.css';
 
+
+// type SearchBarProps = {
+//   className: string;
+//   placeholder?: string;
+//   onChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
+// };
 type SearchBarProps = {
-  className: string;
-  placeholder?: string;
-  onChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
+  style?: StyleProp<TextStyle>;
+  placeholder: string;
+  onChangeHandler: (text: string) => void;
 };
 
 // const SearchBar = ({ 
@@ -19,13 +25,22 @@ type SearchBarProps = {
 //     onChange={onChangeHandler}
 //   />
 // );
-import { TextInput } from 'react-native';
 
-const SearchBar = ({ className, placeholder, onChangeHandler }: SearchBarProps) => (
+// const SearchBar = ({ className, placeholder, onChangeHandler }: SearchBarProps) => (
+//   <TextInput
+//     style={[className, { height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 8 }]} 
+//     placeholder={placeholder}
+//     onChangeText={onChangeHandler} 
+//   />
+// );
+const SearchBar = ({ style, placeholder, onChangeHandler }: SearchBarProps) => (
   <TextInput
-    style={[className, { height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 8 }]} 
+    style={[
+      { height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 8 },
+      style,
+    ]}
     placeholder={placeholder}
-    onChangeText={onChangeHandler} 
+    onChangeText={onChangeHandler}
   />
 );
 
