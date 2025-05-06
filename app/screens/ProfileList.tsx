@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TextInput } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { collection, getDocs } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import ProfileCardList from '../components/ProfileCardList.tsx';
+import SearchBar from '../components/SearchBar';
+
 import { db } from '../firebaseConfig';
-import ProfileCard from '../components/ProfileCard';
+
 
 export default function ProfileList() {
   const [profiles, setProfiles] = useState<any[]>([]);
+  const [filteredProfiles, setFilteredProfiles] = useState<any[]>([]); // Holds profiles after filtering
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSkill, setSelectedSkill] = useState(''); // Holds selected skills for filtering
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -23,9 +29,38 @@ export default function ProfileList() {
     fetchProfiles();
   }, []);
 
-  const filteredProfiles = profiles.filter(profile =>
-    profile.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filtering logic
+  useEffect(() => {
+    const filterBySkills = (profile: any) => {
+      if (!selectedSkill) return true; // No skill selected
+    
+      const allSkills = [
+        ...(profile.skills?.competent || []),
+        ...(profile.skills?.familiar || []),
+        ...(profile.skills?.proficient || []),
+      ];
+      return allSkills.includes(selectedSkill);
+    };
+
+    const filterBySearchQuery = (profile: any) => {
+      return profile.name.toLowerCase().includes(searchQuery.toLowerCase()); // Search by name
+    };
+
+  // Apply filters to profiles
+  const result = profiles.filter(profile => 
+    filterBySkills(profile) && filterBySearchQuery(profile)
   );
+  setFilteredProfiles(result); // Update the filtered profiles
+}, [searchQuery, selectedSkill, profiles]);
+
+const handleSearchQueryChange = (query: string) => {
+  setSearchQuery(query); // Update search query on change
+};
+
+const handleSkillFilterChange = (selected: string[]) => {
+  setSelectedSkill(selected); // Update selected skills for filtering
+};
+
 
   if (loading) {
     return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
@@ -33,18 +68,22 @@ export default function ProfileList() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search by name"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-      <FlatList
-        data={filteredProfiles}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ProfileCard profile={item} />}
-        contentContainerStyle={styles.list}
-      />
+      <SearchBar className="custom-class" placeholder="Search by name" 
+      onChangeHandler={(e) => setSearchQuery(e.target.value)} />
+      {/* Skill Filter Dropdown */}
+    <Picker
+    selectedValue={selectedSkill}
+    onValueChange={(itemValue) => setSelectedSkill(itemValue)}
+    style={{ marginVertical: 12, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+    <Picker.Item label="All Skills" value="" />
+    <Picker.Item label="Java" value="Java" />
+    <Picker.Item label="Python" value="Python" />
+    <Picker.Item label="React" value="React" />
+    <Picker.Item label="SQL" value="SQL" />
+    <Picker.Item label="HTML" value={"HTML/CSS"} />
+  </Picker>
+
+      <ProfileCardList profiles={filteredProfiles} />
     </View>
   );
 }
@@ -54,16 +93,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 16,
     paddingHorizontal: 16,
-  },
-  searchBar: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginBottom: 16,
-  },
-  list: {
-    paddingBottom: 16,
   },
 });
