@@ -3,9 +3,23 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import Entypo from '@expo/vector-icons/Entypo';
-import { Image, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Appearance, Image, StyleSheet } from 'react-native';
 
 export default function TabTwoScreen() {
+
+    const [theme, setTheme] = useState(Appearance.getColorScheme());
+  
+    useEffect(() => {
+      const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+        setTheme(colorScheme);
+      });
+  
+      return () => subscription.remove();
+    }, []);
+
+  const dotColor = theme === 'dark' ? 'white' : 'black';
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#ff002e', dark: '#ff002e' }}
@@ -18,10 +32,10 @@ export default function TabTwoScreen() {
       <ThemedText>Browse through our list of top, qualified candidates using the trainee finder app!</ThemedText>
       <Collapsible title="App Features">
         <ThemedText>
-          <Entypo name="dot-single" size={16} color="white" />Filter candidates based on name, skills or experience.
+          <Entypo name="dot-single" size={16} color={dotColor} />Filter candidates based on name, skills or experience.
         </ThemedText>
         <ThemedText>
-          <Entypo name="dot-single" size={16} color="white" />Preview projects that the candidate has worked on.
+          <Entypo name="dot-single" size={16} color={dotColor} />Preview projects that the candidate has worked on.
         </ThemedText>
       </Collapsible>
 
