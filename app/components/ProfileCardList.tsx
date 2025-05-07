@@ -67,11 +67,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1/3, // For 3 columns per row
     padding: 8,
-    maxWidth: Platform.OS === 'ios' ? '100%' : '33.333%', // Full width on iOS, 1/3 width elsewhere
+    // maxWidth: Platform.OS === 'ios' ? '100%' : '33.333%', // Full width on iOS, 1/3 width elsewhere
   },
   card: {
     height: 200,
-    width: '100%',
     borderRadius: 8,
     backgroundColor: '#f0f0f0',
     overflow: 'hidden'
