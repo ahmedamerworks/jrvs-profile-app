@@ -13,27 +13,27 @@ type Profile = {
 export default function ProfileCard({ profile }: { profile: Profile }) {
   return (
     <View style={styles.card}>
-    <Text style={styles.name}>{profile.name}</Text>
-    <Text style={styles.label}>Email:</Text>
-    <Text style={styles.info}>{profile.email || 'N/A'}</Text>
+      <Text style={styles.name}>{profile.name}</Text>
+    {/* <Text style={styles.label}>Email:</Text>
+    <Text style={styles.info}>{profile.role || 'N/A'}</Text>
     <Text style={styles.label}>Phone:</Text>
-    <Text style={styles.info}>{profile.phone || 'N/A'}</Text>
+    <Text style={styles.info}>{profile.phone || 'N/A'}</Text> */}
 
-    {profile.role && (
+      {profile.role && (
       <>
         <Text style={styles.label}>Role:</Text>
         <Text style={styles.info}>{profile.role}</Text>
       </>
     )}
     {profile.skills && (
-  <Text style={styles.skills}>
-    <Text style={styles.skillCategory}>Skills: </Text>
-    {[
+    <Text style={styles.skills}>
+      <Text style={styles.skillCategory}>Top Skills: </Text>
+      {[
       ...profile.skills.proficient,
       ...profile.skills.competent,
       ...profile.skills.familiar,
-    ].join(', ')}
-  </Text>
+      ].join(', ')}
+    </Text>
 )}
       {/* Add more fields if needed */}
     </View>
