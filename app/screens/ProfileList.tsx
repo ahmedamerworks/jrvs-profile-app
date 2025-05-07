@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import ProfileCardList from '../components/ProfileCardList.tsx';
+import ProfileCardList from '../components/ProfileCardList';
 import SearchBar from '../components/SearchBar';
 
 import { db } from '../firebaseConfig';

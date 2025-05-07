@@ -1,4 +1,3 @@
-// src/components/ProfileCard/profile-card.component.tsx
 import { StyleSheet, Text, View } from 'react-native';
 
 type Profile = {
@@ -7,35 +6,47 @@ type Profile = {
   email?: string;
   phone?: string;
   role?: string;
-  skills?: string[];
+  skills?: {
+    proficient: string[];
+    competent: string[];
+    familiar: string[];
+  };
 };
 
 export default function ProfileCard({ profile }: { profile: Profile }) {
+  // Compose skills string for screen reader
+  const skillsText = profile.skills
+    ? [
+        ...profile.skills.proficient,
+        ...profile.skills.competent,
+        ...profile.skills.familiar,
+      ].join(', ')
+    : 'No skills listed';
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.name}>{profile.name}</Text>
-    {/* <Text style={styles.label}>Email:</Text>
-    <Text style={styles.info}>{profile.role || 'N/A'}</Text>
-    <Text style={styles.label}>Phone:</Text>
-    <Text style={styles.info}>{profile.phone || 'N/A'}</Text> */}
+    <View
+      style={styles.card}
+      accessible={true}
+      accessibilityLabel={`Profile card. Name: ${profile.name}. Role: ${profile.role || 'Not specified'}. Skills: ${skillsText}.`}
+      accessibilityRole="summary"
+    >
+      <Text style={styles.name} allowFontScaling={true}>
+        {profile.name}
+      </Text>
 
       {profile.role && (
-      <>
-        <Text style={styles.label}>Role:</Text>
-        <Text style={styles.info}>{profile.role}</Text>
-      </>
-    )}
-    {profile.skills && (
-    <Text style={styles.skills}>
-      <Text style={styles.skillCategory}>Top Skills: </Text>
-      {[
-      ...profile.skills.proficient,
-      ...profile.skills.competent,
-      ...profile.skills.familiar,
-      ].join(', ')}
-    </Text>
-)}
-      {/* Add more fields if needed */}
+        <>
+          <Text style={styles.label} allowFontScaling={true}>Role:</Text>
+          <Text style={styles.info} allowFontScaling={true}>{profile.role}</Text>
+        </>
+      )}
+
+      {profile.skills && (
+        <Text style={styles.skills} allowFontScaling={true}>
+          <Text style={styles.skillCategory} allowFontScaling={true}>Top Skills: </Text>
+          {skillsText}
+        </Text>
+      )}
     </View>
   );
 }
@@ -53,13 +64,13 @@ const styles = StyleSheet.create({
     elevation: 4,
     height: 200,
     width: '100%',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   name: {
     fontSize: 22,
     fontWeight: '700',
     marginBottom: 12,
-    color: '#333',
+    color: '#333', // Good contrast
   },
   label: {
     fontSize: 14,
@@ -76,10 +87,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
-  
   skillCategory: {
     fontWeight: 'bold',
     color: '#555',
   },
-  
 });
