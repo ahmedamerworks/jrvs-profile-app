@@ -1,9 +1,5 @@
 // src/components/ProfileCard/profile-card.component.tsx
-<<<<<<< Updated upstream
-import { StyleSheet, Text, View } from 'react-native';
-=======
 import { Linking, StyleSheet, Text, View } from 'react-native';
->>>>>>> Stashed changes
 
 type Profile = {
   id: string;
@@ -11,13 +7,6 @@ type Profile = {
   role?: string;
   email?: string;
   phone?: string;
-<<<<<<< Updated upstream
-  role?: string;
-  skills?: string[];
-};
-
-export default function ProfileCard({ profile }: { profile: Profile }) {
-=======
   github_repo_root_url?: string;
   skills?: {
     proficient: string[];
@@ -38,23 +27,17 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
       .join(', ')
     : 'No skills listed';
 
->>>>>>> Stashed changes
   return (
-    <View style={styles.card}>
-      <Text style={styles.name}>{profile.name}</Text>
-    {/* <Text style={styles.label}>Email:</Text>
-    <Text style={styles.info}>{profile.role || 'N/A'}</Text>
-    <Text style={styles.label}>Phone:</Text>
-    <Text style={styles.info}>{profile.phone || 'N/A'}</Text> */}
+    <View
+      style={styles.card}
+      accessible={true}
+      accessibilityLabel={`Profile card. Name: ${profile.name}. Role: ${profile.role || 'Not specified'}. Skills: ${skillsText}.`}
+      accessibilityRole="summary"
+    >
+      <Text style={styles.name} allowFontScaling={true}>
+        {profile.name}
+      </Text>
 
-<<<<<<< Updated upstream
-      {profile.role && (
-      <>
-        <Text style={styles.label}>Role:</Text>
-        <Text style={styles.info}>{profile.role}</Text>
-      </>
-    )}
-=======
     {profile.github_repo_root_url && (
       <Text
         style={styles.githubLink}
@@ -64,7 +47,6 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
       </Text>
     )}
 
->>>>>>> Stashed changes
     {profile.skills && (
     <Text style={styles.skills}>
       <Text style={styles.skillCategory}>Top Skills: </Text>
@@ -72,13 +54,9 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
       ...profile.skills.proficient,
       ...profile.skills.competent,
       ...profile.skills.familiar,
-<<<<<<< Updated upstream
-      ].join(', ')}
-=======
       ]
       .slice(0,5)
       .join(', ')}
->>>>>>> Stashed changes
     </Text>
 )}
       {/* Add more fields if needed */}
@@ -127,10 +105,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#555',
   },
-<<<<<<< Updated upstream
-  
-});
-=======
   githubLink: {
     fontSize: 12,
     color: '#1a0dab',
@@ -142,4 +116,3 @@ const styles = StyleSheet.create({
   
   
 });
->>>>>>> Stashed changes

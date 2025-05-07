@@ -1,12 +1,7 @@
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-<<<<<<< Updated upstream
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import ProfileCardList from '../components/ProfileCardList.tsx';
-=======
 import { ActivityIndicator, StyleSheet, View, Text } from 'react-native';
 import ProfileCardList from '../components/ProfileCardList';
->>>>>>> Stashed changes
 import SearchBar from '../components/SearchBar';
 import { db } from '../firebaseConfig';
 
@@ -121,5 +116,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
     color: '#555',
+    paddingHorizontal: 10,
   },
 });
