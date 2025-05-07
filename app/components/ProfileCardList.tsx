@@ -71,11 +71,19 @@ const styles = StyleSheet.create({
   },
   card: {
     height: 200,
+    width: '100%',
     borderRadius: 8,
     backgroundColor: '#f0f0f0',
+    overflow: 'hidden'
     // Add shadow, border, etc. as needed
   },
   placeholder: {
     backgroundColor: 'transparent',
+  },
+  cardContent: {
+    flex: 1,
+    padding: 12,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   }
 });

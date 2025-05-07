@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 4,
+    height: 200,
+    width: '100%',
+    overflow: 'hidden'
   },
   name: {
     fontSize: 22,
