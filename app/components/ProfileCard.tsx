@@ -1,30 +1,52 @@
 // src/components/ProfileCard/profile-card.component.tsx
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 
 type Profile = {
   id: string;
   name: string;
+  role?: string;
   email?: string;
   phone?: string;
-  role?: string;
-  skills?: string[];
+  github_repo_root_url?: string;
+  skills?: {
+    proficient: string[];
+    competent: string[];
+    familiar: string[];
+  };
 };
 
 export default function ProfileCard({ profile }: { profile: Profile }) {
-  return (
-    <View style={styles.card}>
-      <Text style={styles.name}>{profile.name}</Text>
-    {/* <Text style={styles.label}>Email:</Text>
-    <Text style={styles.info}>{profile.role || 'N/A'}</Text>
-    <Text style={styles.label}>Phone:</Text>
-    <Text style={styles.info}>{profile.phone || 'N/A'}</Text> */}
+  // Compose skills string for screen reader
+  const skillsText = profile.skills
+    ? [
+        ...profile.skills.proficient,
+        ...profile.skills.competent,
+        ...profile.skills.familiar,
+      ]
+      .slice(0,5)
+      .join(', ')
+    : 'No skills listed';
 
-      {profile.role && (
-      <>
-        <Text style={styles.label}>Role:</Text>
-        <Text style={styles.info}>{profile.role}</Text>
-      </>
+  return (
+    <View
+      style={styles.card}
+      accessible={true}
+      accessibilityLabel={`Profile card. Name: ${profile.name}. Role: ${profile.role || 'Not specified'}. Skills: ${skillsText}.`}
+      accessibilityRole="summary"
+    >
+      <Text style={styles.name} allowFontScaling={true}>
+        {profile.name}
+      </Text>
+
+    {profile.github_repo_root_url && (
+      <Text
+        style={styles.githubLink}
+        onPress={() => profile.github_repo_root_url && Linking.openURL(profile.github_repo_root_url)}
+      >
+        GitHub
+      </Text>
     )}
+
     {profile.skills && (
     <Text style={styles.skills}>
       <Text style={styles.skillCategory}>Top Skills: </Text>
@@ -32,7 +54,9 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
       ...profile.skills.proficient,
       ...profile.skills.competent,
       ...profile.skills.familiar,
-      ].join(', ')}
+      ]
+      .slice(0,5)
+      .join(', ')}
     </Text>
 )}
       {/* Add more fields if needed */}
@@ -81,5 +105,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#555',
   },
+  githubLink: {
+    fontSize: 12,
+    color: '#1a0dab',
+    textDecorationLine: 'none',
+    marginBottom: 8,
+    marginTop: -8,
+    marginLeft: 2,
+  },
+  
   
 });

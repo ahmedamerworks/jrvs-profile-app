@@ -1,19 +1,15 @@
-import { Picker } from '@react-native-picker/picker';
 import { collection, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import ProfileCardList from '../components/ProfileCardList.tsx';
+import { ActivityIndicator, StyleSheet, View, Text } from 'react-native';
+import ProfileCardList from '../components/ProfileCardList';
 import SearchBar from '../components/SearchBar';
-
 import { db } from '../firebaseConfig';
-
 
 export default function ProfileList() {
   const [profiles, setProfiles] = useState<any[]>([]);
-  const [filteredProfiles, setFilteredProfiles] = useState<any[]>([]); // Holds profiles after filtering
+  const [filteredProfiles, setFilteredProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSkill, setSelectedSkill] = useState(''); // Holds selected skills for filtering
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -29,61 +25,72 @@ export default function ProfileList() {
     fetchProfiles();
   }, []);
 
-  // Filtering logic
+  // Filter by name or skill using the search query
   useEffect(() => {
-    const filterBySkills = (profile: any) => {
-      if (!selectedSkill) return true; // No skill selected
-    
+    const result = profiles.filter((profile) => {
+      const lowerQuery = searchQuery.toLowerCase();
+
+      const matchesName = profile.name?.toLowerCase().includes(lowerQuery);
+
       const allSkills = [
         ...(profile.skills?.competent || []),
         ...(profile.skills?.familiar || []),
         ...(profile.skills?.proficient || []),
       ];
-      return allSkills.includes(selectedSkill);
-    };
+      const matchesSkill = allSkills.some(skill =>
+        skill.toLowerCase().includes(lowerQuery)
+      );
 
-    const filterBySearchQuery = (profile: any) => {
-      return profile.name.toLowerCase().includes(searchQuery.toLowerCase()); // Search by name
-    };
+      return matchesName || matchesSkill;
+    });
 
-  // Apply filters to profiles
-  const result = profiles.filter(profile => 
-    filterBySkills(profile) && filterBySearchQuery(profile)
-  );
-  setFilteredProfiles(result); // Update the filtered profiles
-}, [searchQuery, selectedSkill, profiles]);
+    setFilteredProfiles(result);
+  }, [searchQuery, profiles]);
 
-const handleSearchQueryChange = (query: string) => {
-  setSearchQuery(query); // Update search query on change
-};
-
-const handleSkillFilterChange = (selected: string[]) => {
-  setSelectedSkill(selected); // Update selected skills for filtering
-};
-
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+  };
 
   if (loading) {
-    return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
+    return (
+      <View 
+        style={styles.loaderContainer} 
+        accessible={true} 
+        accessibilityRole="alert"
+        accessibilityLabel="Loading profiles"
+      >
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
 
   return (
-    <View style={styles.container}>
-      <SearchBar className="custom-class" placeholder="Search by name" 
-      onChangeHandler={(e) => setSearchQuery(e.target.value)} />
-      {/* Skill Filter Dropdown */}
-      <Picker
-        selectedValue={selectedSkill}
-        onValueChange={(itemValue) => setSelectedSkill(itemValue)}
-        style={{ marginVertical: 12, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
-        <Picker.Item label="All Skills" value="" />
-        <Picker.Item label="Java" value="Java" />
-        <Picker.Item label="Python" value="Python" />
-        <Picker.Item label="React" value="React" />
-        <Picker.Item label="SQL" value="SQL" />
-        <Picker.Item label="HTML" value={"HTML/CSS"} />
-      </Picker>
+    <View
+      style={styles.container}
+      accessible={true}
+      accessibilityLabel="Profile list screen"
+      accessibilityHint="Search for profiles and view trainee cards"
+    >
+      <Text style={styles.heading} accessibilityRole="header">
+        Trainee Profiles
+      </Text>
 
-      <ProfileCardList profiles={filteredProfiles} />
+      <SearchBar
+        placeholder="Search by name or skill"
+        onChangeHandler={handleSearchQueryChange}
+      />
+
+      {filteredProfiles.length === 0 ? (
+        <Text 
+          style={styles.noResults} 
+          accessible={true}
+          accessibilityLiveRegion="polite"
+        >
+          No profiles found.
+        </Text>
+      ) : (
+        <ProfileCardList profiles={filteredProfiles} />
+      )}
     </View>
   );
 }
@@ -92,6 +99,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  noResults: {
+    fontSize: 16,
+    marginTop: 20,
+    textAlign: 'center',
+    color: '#555',
+    paddingHorizontal: 10,
   },
 });
