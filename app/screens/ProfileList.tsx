@@ -71,17 +71,17 @@ const handleSkillFilterChange = (selected: string[]) => {
       <SearchBar className="custom-class" placeholder="Search by name" 
       onChangeHandler={(e) => setSearchQuery(e.target.value)} />
       {/* Skill Filter Dropdown */}
-    <Picker
-    selectedValue={selectedSkill}
-    onValueChange={(itemValue) => setSelectedSkill(itemValue)}
-    style={{ marginVertical: 12, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
-    <Picker.Item label="All Skills" value="" />
-    <Picker.Item label="Java" value="Java" />
-    <Picker.Item label="Python" value="Python" />
-    <Picker.Item label="React" value="React" />
-    <Picker.Item label="SQL" value="SQL" />
-    <Picker.Item label="HTML" value={"HTML/CSS"} />
-  </Picker>
+      <Picker
+        selectedValue={selectedSkill}
+        onValueChange={(itemValue) => setSelectedSkill(itemValue)}
+        style={{ marginVertical: 12, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+        <Picker.Item label="All Skills" value="" />
+        <Picker.Item label="Java" value="Java" />
+        <Picker.Item label="Python" value="Python" />
+        <Picker.Item label="React" value="React" />
+        <Picker.Item label="SQL" value="SQL" />
+        <Picker.Item label="HTML" value={"HTML/CSS"} />
+      </Picker>
 
       <ProfileCardList profiles={filteredProfiles} />
     </View>
